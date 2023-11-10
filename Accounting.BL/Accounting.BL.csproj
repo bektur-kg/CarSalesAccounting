@@ -58,9 +58,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\UsersCredentialsController.cs" />
+    <Compile Include="Helpers\ArgumentChecker.cs" />
     <Compile Include="Models\AccountTypesEnum.cs" />
+    <Compile Include="Models\Director.cs" />
     <Compile Include="Models\FileNames.cs" />
+    <Compile Include="Models\Repairman.cs" />
+    <Compile Include="Models\Seller.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Models\UsersCredentials.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

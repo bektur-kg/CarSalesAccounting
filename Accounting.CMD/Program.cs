@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Security.AccessControl;
 using Accounting.BL.Controllers;
+using Accounting.BL.Helpers;
 using Accounting.BL.Models;
 
 namespace Accounting.CMD
@@ -14,7 +16,18 @@ namespace Accounting.CMD
             Console.ForegroundColor = ConsoleColor.Green;
 
             AccountTypesEnum accountType = EnterAccountType();
+            EnterLoginAndPassword();
 
+            switch (accountType)
+            {
+                case AccountTypesEnum.Repairman:
+
+                    break;
+                case AccountTypesEnum.Seller:
+                    break;
+                case AccountTypesEnum.Director:
+                    break;
+            }
         }
 
         public static AccountTypesEnum EnterAccountType()
@@ -47,14 +60,26 @@ namespace Accounting.CMD
         {
             while (true)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+
                 Console.Write("Enter you login: ");
                 string login = Console.ReadLine();
+
                 Console.Write("Enter your password: ");
                 string password = Console.ReadLine();
 
-               // if ()
-                {
+                UsersCredentialsController userCredentialsController = new UsersCredentialsController();
 
+                if (userCredentialsController.CanSignIn(login, password))
+                {
+                    Console.WriteLine($"Welcome to Car Sales Accounting, {login}");
+                    break;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Sorry, but the login or password is incorrect");
+                    continue;
                 }
             }
         }

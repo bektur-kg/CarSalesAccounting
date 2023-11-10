@@ -1,4 +1,5 @@
-﻿using Accounting.BL.Models;
+﻿using Accounting.BL.Helpers;
+using Accounting.BL.Models;
 using System;
 using System.Collections.Generic;
 
@@ -7,10 +8,13 @@ namespace Accounting.BL.Controllers
     public class UsersCredentialsController : BaseController
     {
         public UsersCredentials Credentials { get; set; }
+        public ArgumentChecker ArgumentChecker { get; set; }
+        public bool IsAccountTaken { get; set; }
 
         public UsersCredentialsController()
         {
             Credentials = GetUsersCredentials();
+            ArgumentChecker = new ArgumentChecker();
         }
 
         public UsersCredentials  GetUsersCredentials() 
@@ -23,23 +27,47 @@ namespace Accounting.BL.Controllers
             Post(FileNames.USERS_CREDENTIALS, Credentials);
         }
 
-        public void AddUserCredentials(string login, string password)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="login"></param>
+        /// <param name="password"></param>
+        /// <returns>If that login is free</returns>
+        public bool AddUserCredentials(string login, string password)
         {
-            //todo: add null checker for login & password
+            ArgumentChecker.ArgumentNullChecker(login, password);
 
             if (Credentials.UserCredentials.ContainsKey(login))
             {
-                //todo
+                return false;
             }
             
             Credentials.UserCredentials.Add(login, password);
 
             SaveUsersCredentials();
+            return true;
         }
 
-        public void RemoveUserCredentials()
+        public void RemoveUserCredentials(string login)
         {
-            //todo
+            ArgumentChecker.ArgumentNullChecker(login);
+
+
+            Credentials.UserCredentials.Remove(login);
+        }
+
+        public bool CanSignIn(string login, string password)
+        {
+            ArgumentChecker.ArgumentNullChecker(login, password);
+
+            if (Credentials.UserCredentials.ContainsKey(login))
+            {
+                return Credentials.UserCredentials[login] == password;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
