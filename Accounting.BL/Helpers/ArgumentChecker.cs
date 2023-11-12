@@ -2,9 +2,9 @@
 
 namespace Accounting.BL.Helpers
 {
-    public class ArgumentChecker
+    public static class ArgumentChecker
     {
-        public void ArgumentNullChecker(params string[] strings)
+        public static void ArgumentNullChecker(params string[] strings)
         {
             foreach (var item in strings)
             {
@@ -14,5 +14,6 @@ namespace Accounting.BL.Helpers
                 }
             }
         }
+
     }
 }

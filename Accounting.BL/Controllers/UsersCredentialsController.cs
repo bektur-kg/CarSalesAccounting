@@ -7,14 +7,12 @@ namespace Accounting.BL.Controllers
 {
     public class UsersCredentialsController : BaseController
     {
-        public UsersCredentials Credentials { get; set; }
-        public ArgumentChecker ArgumentChecker { get; set; }
+        public UsersCredentials Credentials { get; private set; }
         public bool IsAccountTaken { get; set; }
 
         public UsersCredentialsController()
         {
             Credentials = GetUsersCredentials();
-            ArgumentChecker = new ArgumentChecker();
         }
 
         public UsersCredentials  GetUsersCredentials() 
@@ -45,6 +43,7 @@ namespace Accounting.BL.Controllers
             Credentials.UserCredentials.Add(login, password);
 
             SaveUsersCredentials();
+
             return true;
         }
 
@@ -52,8 +51,9 @@ namespace Accounting.BL.Controllers
         {
             ArgumentChecker.ArgumentNullChecker(login);
 
-
             Credentials.UserCredentials.Remove(login);
+
+            SaveUsersCredentials();
         }
 
         public bool CanSignIn(string login, string password)

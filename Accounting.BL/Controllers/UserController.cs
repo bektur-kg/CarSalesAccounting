@@ -1,23 +1,45 @@
-﻿using Accounting.BL.Models;
+﻿using Accounting.BL.Helpers;
+using Accounting.BL.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Accounting.BL.Controllers
 {
     public class UserController : BaseController
     {
-        AccountTypesEnum AccountType { get; set; }
-        public Dictionary<AccountTypesEnum, List<User>> Accounts { get; private set; }
+        public User Account { get; private set; }
+        public List<User> AllAccounts { get; private set; }
 
 
-        public UserController(AccountTypesEnum accountType)
+        public UserController(string login)
         {
-            AccountType = accountType;
-            Accounts = GetAllAccounts();
+            AllAccounts = GetAllAccounts();
+            Account = AllAccounts.FirstOrDefault(account => account.Login == login);
         }
 
-        public Dictionary<AccountTypesEnum, List<User>> GetAllAccounts()
+        public List<User> GetAllAccounts()
         {
-            return Get<Dictionary<AccountTypesEnum, List<User>>>(FileNames.ACCOUNTS) ?? new Dictionary<AccountTypesEnum, List<User>>();
+            return Get<List<User>>(FileNames.ACCOUNTS) ?? new List<User>();
+        }
+
+        public void SaveAllAccounts()
+        {
+            Post(FileNames.ACCOUNTS, AllAccounts);
+        }
+
+        public void CreateNewUser(string login, string password, AccountTypesEnum newUserAccountType)
+        {
+            ArgumentChecker.ArgumentNullChecker(login, password);
+
+            AccountTypeChecker.IsDirectorAccount(Account.AccountType);
+
+            UsersCredentialsController usersCredentialsController = new UsersCredentialsController();
+            usersCredentialsController.AddUserCredentials(login, password);
+
+            User newUser = new User(login, newUserAccountType);
+            AllAccounts.Add(newUser);
+
+            SaveAllAccounts();
         }
     }
 }

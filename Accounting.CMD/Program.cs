@@ -6,7 +6,6 @@ using Accounting.BL.Models;
 
 namespace Accounting.CMD
 {
-
     internal class Program
     {
         static void Main(string[] args)
@@ -21,11 +20,19 @@ namespace Accounting.CMD
             switch (accountType)
             {
                 case AccountTypesEnum.Repairman:
+                    RepairmanCMD repairmanCMD = new RepairmanCMD();
 
+                    repairmanCMD.CommandsList();
                     break;
                 case AccountTypesEnum.Seller:
+                    SellerCMD sellerCMD = new SellerCMD();
+
+                    sellerCMD.CommandsList();
                     break;
                 case AccountTypesEnum.Director:
+                    DirectorCMD directorCMD = new DirectorCMD();
+
+                    directorCMD.CommandsList();
                     break;
             }
         }
@@ -73,6 +80,8 @@ namespace Accounting.CMD
                 if (userCredentialsController.CanSignIn(login, password))
                 {
                     Console.WriteLine($"Welcome to Car Sales Accounting, {login}");
+                    new UserController(login);
+
                     break;
                 }
                 else
