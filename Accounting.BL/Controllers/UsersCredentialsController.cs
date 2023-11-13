@@ -58,6 +58,7 @@ namespace Accounting.BL.Controllers
 
             UsersCredentials foundUserCredentials = Credentials.Find(user => user.Login == login);
 
+            //todo: add checker to prevent deleting last director
             if (foundUserCredentials != null)
             {
                 Credentials.Remove(foundUserCredentials);

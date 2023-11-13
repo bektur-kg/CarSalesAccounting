@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.AccessControl;
 using Accounting.BL.Controllers;
 using Accounting.BL.Helpers;
 using Accounting.BL.Models;
@@ -73,8 +72,8 @@ namespace Accounting.CMD
             {
                 Console.ForegroundColor = ConsoleColor.Green;
 
-                string login = ConsoleInput.Text("Enter you login: ");
-                string password = ConsoleInput.Text("Enter your password: ");
+                string login = ConsoleInput.TextType("Enter you login: ");
+                string password = ConsoleInput.TextType("Enter your password: ");
 
                 UsersCredentialsController userCredentialsController = new UsersCredentialsController();
 
@@ -82,7 +81,6 @@ namespace Accounting.CMD
                 {
                     Console.Clear();
                     Console.WriteLine($"Welcome to Car Sales Accounting, {login}\n");
-                    // new UserController(login);
 
                     return login;
                 }

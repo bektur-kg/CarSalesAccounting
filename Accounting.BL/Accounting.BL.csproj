@@ -63,7 +63,7 @@
     <Compile Include="Controllers\UsersCredentialsController.cs" />
     <Compile Include="Helpers\AccountTypeChecker.cs" />
     <Compile Include="Helpers\ArgumentChecker.cs" />
-    <Compile Include="Helpers\InputText.cs" />
+    <Compile Include="Helpers\ConsoleInput.cs" />
     <Compile Include="Models\Automobile\ATTEnum.cs" />
     <Compile Include="Models\Automobile\CarBodyTypesEnum.cs" />
     <Compile Include="Models\Account\AccountTypesEnum.cs" />

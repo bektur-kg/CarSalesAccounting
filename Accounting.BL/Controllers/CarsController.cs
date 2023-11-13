@@ -25,7 +25,7 @@ namespace Accounting.BL.Controllers
             Post(FileNames.CARS, Cars);
         }
 
-        public void AddCar(string model, string brand, CarBodyTypesEnum bodyType, ATTEnum ATT, int price, string description, FuelTypeEnum fuelType)
+        public void AddCar(string model, string brand, CarBodyTypesEnum bodyType, ATTEnum ATT, double price, string description, FuelTypeEnum fuelType)
         {
             AccountTypeChecker.IsDirectorAccount(Account.AccountType);
 

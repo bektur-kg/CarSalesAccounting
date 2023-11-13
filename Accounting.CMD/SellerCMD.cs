@@ -24,7 +24,8 @@ namespace Accounting.CMD
                 switch (consoleKey.Key)
                 {
                     case ConsoleKey.D1:
-                        Console.WriteLine("list of all cars");
+                        
+
                         break;
                     case ConsoleKey.D2:
 
@@ -43,6 +44,11 @@ namespace Accounting.CMD
                         break;
                 }
             }
+        }
+
+        public void ListOfAllCars()
+        {
+
         }
     }
 }

@@ -1,7 +1,10 @@
 ﻿using Accounting.BL.Controllers;
 using Accounting.BL.Helpers;
 using Accounting.BL.Models;
+using Accounting.BL.Models.Automobile;
+using Accounting.BL.Models.AutoMobile;
 using System;
+using System.IO;
 
 namespace Accounting.CMD
 {
@@ -63,6 +66,8 @@ namespace Accounting.CMD
 
                         break;
                     case ConsoleKey.D9:
+                        Console.WriteLine("Adding a new car\n");
+                        AddNewCar();
 
                         break;
                     case ConsoleKey.Q:
@@ -73,9 +78,9 @@ namespace Accounting.CMD
 
         private void CreateNewUser()
         {
-            string login = ConsoleInput.Text("Login: ");
-            string password = ConsoleInput.Text("Password: ");
-            string accountType = ConsoleInput.Text("AccountType (Seller, Repairman, Director): ");
+            string login = ConsoleInput.TextType("Login: ");
+            string password = ConsoleInput.TextType("Password: ");
+            string accountType = ConsoleInput.TextType("AccountType (Seller, Repairman, Director): ");
 
             if (
                 accountType == AccountTypesEnum.Seller.ToString() || 
@@ -97,6 +102,31 @@ namespace Accounting.CMD
                 Console.WriteLine("Sorry, but there is no such account type. Try again!");
             }
 
+        }
+
+        private void AddNewCar()
+        {
+            string brand = ConsoleInput.TextType("Brand: ");
+            string model = ConsoleInput.TextType("Model: ");
+            CarBodyTypesEnum bodyType = ConsoleInput.EnumType<CarBodyTypesEnum>("Body Type of a Car: ");
+            ATTEnum ATT = ConsoleInput.EnumType<ATTEnum>("Automatic Transmission Type: ");
+            FuelTypeEnum fuelType = ConsoleInput.EnumType<FuelTypeEnum>("Fuel Type: ");
+            double price = ConsoleInput.PriceType("Price: ");
+            string description = ConsoleInput.TextType("Description: ");
+
+            CarsController carsController = new CarsController(Login);
+
+            try
+            {
+                carsController.AddCar(model, brand, bodyType, ATT, price, description, fuelType);
+
+                Console.WriteLine($"A new car Brand: {brand}, Model: {model}, Price: {price}$ successfully added");
+            }
+            catch (Exception)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Your account type isn't Director");
+            }
         }
     }
 }
