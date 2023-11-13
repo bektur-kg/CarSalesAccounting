@@ -58,14 +58,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CarsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\UsersCredentialsController.cs" />
     <Compile Include="Helpers\AccountTypeChecker.cs" />
     <Compile Include="Helpers\ArgumentChecker.cs" />
-    <Compile Include="Models\AccountTypesEnum.cs" />
+    <Compile Include="Helpers\InputText.cs" />
+    <Compile Include="Models\Automobile\ATTEnum.cs" />
+    <Compile Include="Models\Automobile\CarBodyTypesEnum.cs" />
+    <Compile Include="Models\Account\AccountTypesEnum.cs" />
+    <Compile Include="Models\Automobile\Car.cs" />
+    <Compile Include="Models\Automobile\FuelTypeEnum.cs" />
     <Compile Include="Models\FileNames.cs" />
-    <Compile Include="Models\User.cs" />
-    <Compile Include="Models\UsersCredentials.cs" />
+    <Compile Include="Models\Automobile\SearchTypesEnum.cs" />
+    <Compile Include="Models\Account\User.cs" />
+    <Compile Include="Models\Account\UsersCredentials.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

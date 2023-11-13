@@ -8,6 +8,7 @@ namespace Accounting.BL.Models
     {
         public Dictionary<string, string> UserCredentials { get; set; }
 
+
         public UsersCredentials()
         {
             UserCredentials = new Dictionary<string, string>();

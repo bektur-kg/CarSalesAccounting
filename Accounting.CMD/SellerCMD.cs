@@ -4,24 +4,22 @@ namespace Accounting.CMD
 {
     public class SellerCMD
     {
-        private const string COMMANDS_LIST = @"
-        1 - Show all list of cars
-        2 - Search a car
-        3 - Report of cars
-        4 - Order a car
-        5 - Show list of sold cars
-        6 - Return a car
-        8 - Exit
-        ";
+        private const string COMMANDS_LIST = 
+        "\n1 - Show all list of cars\n2 - Search a car\n3 - Report of cars\n4 - Order a car\n5 - Show list of sold cars\n6 - Return a car\n8 - Exit\n";
 
         public void CommandsList()
         {
             while (true)
             {
-                Console.WriteLine("Please enter a number of a command in menu.\nIf you finished enter 7");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("\nPlease enter a number of a command in menu.\nIf you finished enter 7");
                 Console.WriteLine(COMMANDS_LIST);
 
                 ConsoleKeyInfo consoleKey = Console.ReadKey();
+
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Green;
+
 
                 switch (consoleKey.Key)
                 {
@@ -29,6 +27,7 @@ namespace Accounting.CMD
                         Console.WriteLine("list of all cars");
                         break;
                     case ConsoleKey.D2:
+
                         break;
                     case ConsoleKey.D3:
                         break;
@@ -44,7 +43,6 @@ namespace Accounting.CMD
                         break;
                 }
             }
-            //ConsoleKey.D1 is the 1 command
         }
     }
 }

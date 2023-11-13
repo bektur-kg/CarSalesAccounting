@@ -1,0 +1,30 @@
+﻿namespace Accounting.BL.Models.AutoMobile
+{
+    public enum CarBodyTypesEnum
+    {
+        Sedan,
+        SUV,
+        Couple,
+        Convertible,
+        Sport,
+        StationWagon,
+        HatchBack,
+        Minivan,
+        Pickup,
+        Micro,
+        Crossover,
+        CoupleSUV,
+        OffRoader,
+        MUV,
+        Wagon,
+        Van,
+        Roadster,
+        Limousine,
+        Muscle,
+        Hyper,
+        CamperVAN,
+        MiniTruck,
+        Truck,
+        BigTruck
+    }
+}
