@@ -31,10 +31,12 @@ namespace Accounting.BL.Controllers
         {
             ArgumentChecker.ArgumentNullChecker(login, password);
 
+            //todo: add newUserAccountType checker
+
             AccountTypeChecker.IsDirectorAccount(Account.AccountType);
 
             UsersCredentialsController usersCredentialsController = new UsersCredentialsController();
-            usersCredentialsController.AddUserCredentials(login, password);
+            usersCredentialsController.AddUserCredentials(login, password, newUserAccountType);
 
             User newUser = new User(login, newUserAccountType);
             AllAccounts.Add(newUser);

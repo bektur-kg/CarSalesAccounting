@@ -15,7 +15,7 @@ namespace Accounting.CMD
             Console.ForegroundColor = ConsoleColor.Green;
 
             AccountTypesEnum accountType = EnterAccountType();
-            string login = EnterLoginAndPassword();
+            string login = EnterLoginAndPassword(accountType);
 
             switch (accountType)
             {
@@ -67,25 +67,22 @@ namespace Accounting.CMD
         /// 
         /// </summary>
         /// <returns>login of an account</returns>
-        public static string EnterLoginAndPassword()
+        public static string EnterLoginAndPassword(AccountTypesEnum accountType)
         {
             while (true)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
 
-                Console.Write("Enter you login: ");
-                string login = Console.ReadLine();
-
-                Console.Write("Enter your password: ");
-                string password = Console.ReadLine();
+                string login = ConsoleInput.Text("Enter you login: ");
+                string password = ConsoleInput.Text("Enter your password: ");
 
                 UsersCredentialsController userCredentialsController = new UsersCredentialsController();
 
-                if (userCredentialsController.CanSignIn(login, password))
+                if (userCredentialsController.CanSignIn(login, password, accountType))
                 {
                     Console.Clear();
                     Console.WriteLine($"Welcome to Car Sales Accounting, {login}\n");
-                    new UserController(login);
+                    // new UserController(login);
 
                     return login;
                 }

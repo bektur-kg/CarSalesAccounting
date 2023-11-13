@@ -75,17 +75,21 @@ namespace Accounting.CMD
         {
             string login = ConsoleInput.Text("Login: ");
             string password = ConsoleInput.Text("Password: ");
-            string accountType = ConsoleInput.Text("AccountType (Seller, Repairman): ");
+            string accountType = ConsoleInput.Text("AccountType (Seller, Repairman, Director): ");
 
-            if (accountType == AccountTypesEnum.Seller.ToString() || accountType == AccountTypesEnum.Repairman.ToString() || accountType == AccountTypesEnum.Director.ToString())
+            if (
+                accountType == AccountTypesEnum.Seller.ToString() || 
+                accountType == AccountTypesEnum.Repairman.ToString() || 
+                accountType == AccountTypesEnum.Director.ToString()
+                )
             {
-                Enum.TryParse(accountType, out AccountTypesEnum accountTypeParsed);
+                Enum.TryParse(accountType, out AccountTypesEnum parsedAccountType);
 
                 UserController userController = new UserController(Login);
 
-                userController.CreateNewUser(login, password, accountTypeParsed);
+                userController.CreateNewUser(login, password, parsedAccountType);
 
-                Console.WriteLine($"New user: {login} created successfully. The user type is {accountTypeParsed}");
+                Console.WriteLine($"New user: {login} created successfully. The user type is {parsedAccountType}");
             }
             else
             {

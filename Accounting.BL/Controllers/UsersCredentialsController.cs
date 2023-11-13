@@ -2,12 +2,13 @@
 using Accounting.BL.Models;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace Accounting.BL.Controllers
 {
     public class UsersCredentialsController : BaseController
     {
-        public UsersCredentials Credentials { get; private set; }
+        public List<UsersCredentials> Credentials { get; private set; }
         public bool IsAccountTaken { get; set; }
 
         public UsersCredentialsController()
@@ -15,9 +16,9 @@ namespace Accounting.BL.Controllers
             Credentials = GetUsersCredentials();
         }
 
-        public UsersCredentials  GetUsersCredentials() 
+        public List<UsersCredentials> GetUsersCredentials() 
         {
-            return Get<UsersCredentials>(FileNames.USERS_CREDENTIALS) ?? new UsersCredentials();
+            return Get<List<UsersCredentials>>(FileNames.USERS_CREDENTIALS) ?? new List<UsersCredentials>();
         }
 
         public void SaveUsersCredentials()
@@ -31,38 +32,58 @@ namespace Accounting.BL.Controllers
         /// <param name="login"></param>
         /// <param name="password"></param>
         /// <returns>If that login is free</returns>
-        public bool AddUserCredentials(string login, string password)
+        public bool AddUserCredentials(string login, string password, AccountTypesEnum accountType)
         {
             ArgumentChecker.ArgumentNullChecker(login, password);
 
-            if (Credentials.UserCredentials.ContainsKey(login))
+            //todo: add chekcer for account type
+
+            UsersCredentials newUserCredentials = new UsersCredentials { Login = login, AccountType = accountType, Password = password };
+
+            if (Credentials.Find(user => user.Login == newUserCredentials.Login) != null)
             {
                 return false;
             }
             
-            Credentials.UserCredentials.Add(login, password);
+            Credentials.Add(newUserCredentials);
 
             SaveUsersCredentials();
 
             return true;
         }
 
-        public void RemoveUserCredentials(string login)
+        public bool RemoveUserCredentials(string login)
         {
             ArgumentChecker.ArgumentNullChecker(login);
 
-            Credentials.UserCredentials.Remove(login);
+            UsersCredentials foundUserCredentials = Credentials.Find(user => user.Login == login);
 
-            SaveUsersCredentials();
+            if (foundUserCredentials != null)
+            {
+                Credentials.Remove(foundUserCredentials);
+
+                SaveUsersCredentials();
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
         }
 
-        public bool CanSignIn(string login, string password)
+        public bool CanSignIn(string login, string password, AccountTypesEnum accountType)
         {
             ArgumentChecker.ArgumentNullChecker(login, password);
 
-            if (Credentials.UserCredentials.ContainsKey(login))
+            //todo: add account type checker
+
+            UsersCredentials userCredentials = Credentials.Find(user => user.Login == login);
+
+            if (userCredentials != null)
             {
-                return Credentials.UserCredentials[login] == password;
+                return userCredentials.Password == password && userCredentials.AccountType == accountType;
             }
             else
             {

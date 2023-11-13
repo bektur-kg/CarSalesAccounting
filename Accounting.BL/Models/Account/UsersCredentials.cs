@@ -6,12 +6,8 @@ namespace Accounting.BL.Models
     [Serializable]
     public class UsersCredentials
     {
-        public Dictionary<string, string> UserCredentials { get; set; }
-
-
-        public UsersCredentials()
-        {
-            UserCredentials = new Dictionary<string, string>();
-        }
+        public string Login { get; set; }
+        public string Password { get; set; }
+        public AccountTypesEnum AccountType { get; set; }
     }
 }
