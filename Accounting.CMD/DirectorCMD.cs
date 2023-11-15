@@ -4,12 +4,15 @@ using Accounting.BL.Models;
 using Accounting.BL.Models.Automobile;
 using Accounting.BL.Models.AutoMobile;
 using System;
-using System.IO;
+using BetterConsoleTables;
+using System.Collections.Generic;
+using Accounting.BL.Exceptions;
 
 namespace Accounting.CMD
 {
     public class DirectorCMD
     {
+        //todo: make a string with beautiful indentations
         public const string COMMANDS_LIST = @"
         1 - Show list of cars available to sell
         2 - Show quantities of sold cars
@@ -20,14 +23,15 @@ namespace Accounting.CMD
         7 - Show the cheapest car
         8 - Create a new employee
         9 - Add a new car
-        Q - Quit
-        ";
+        Q - Quit";
 
         public string Login { get; private set; }
+        public CarsController CarsController { get; set; }
 
         public DirectorCMD(string login)
         {
             Login = login;
+            CarsController = new CarsController(Login);
         }
 
         public void CommandsList()
@@ -46,7 +50,9 @@ namespace Accounting.CMD
                 switch (consoleKey.Key)
                 {
                     case ConsoleKey.D1:
-                        Console.WriteLine("list of all cars");
+                        Console.WriteLine("List of all cars");
+
+                        WriteCarsTable(CarsController.Cars);
                         break;
                     case ConsoleKey.D2:
                         break;
@@ -57,8 +63,14 @@ namespace Accounting.CMD
                     case ConsoleKey.D5:
                         break;
                     case ConsoleKey.D6:
+                        Console.WriteLine("The Most Expensive Car is: ");
+                        GetPriciestCar();
+
                         break;
                     case ConsoleKey.D7:
+                        Console.WriteLine("The Cheapest Car is: ");
+                        GetCheapestCar();
+
                         break;
                     case ConsoleKey.D8:
                         Console.WriteLine("Creating a new employee\n");
@@ -81,6 +93,12 @@ namespace Accounting.CMD
             string login = ConsoleInput.TextType("Login: ");
             string password = ConsoleInput.TextType("Password: ");
             string accountType = ConsoleInput.TextType("AccountType (Seller, Repairman, Director): ");
+            double userCommissionPercents = 0.0;
+
+            if (accountType == AccountTypesEnum.Seller.ToString())
+            {
+                userCommissionPercents = ConsoleInput.PriceType("User Commission Percents: ");
+            }
 
             if (
                 accountType == AccountTypesEnum.Seller.ToString() || 
@@ -92,16 +110,22 @@ namespace Accounting.CMD
 
                 UserController userController = new UserController(Login);
 
-                userController.CreateNewUser(login, password, parsedAccountType);
+                try
+                {
+                    userController.CreateNewUser(login, password, parsedAccountType, userCommissionPercents);
+                }
+                catch (AccountIsTakenException)
+                {
+                    ConsoleOutput.ErrorMessage($"Sorry, This login - {login} is already taken. Try again!");
+                    return;
+                }
 
                 Console.WriteLine($"New user: {login} created successfully. The user type is {parsedAccountType}");
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Sorry, but there is no such account type. Try again!");
+                ConsoleOutput.ErrorMessage("Sorry, but there is no such account type. Try again!");
             }
-
         }
 
         private void AddNewCar()
@@ -114,18 +138,61 @@ namespace Accounting.CMD
             double price = ConsoleInput.PriceType("Price: ");
             string description = ConsoleInput.TextType("Description: ");
 
-            CarsController carsController = new CarsController(Login);
-
             try
             {
-                carsController.AddCar(model, brand, bodyType, ATT, price, description, fuelType);
+                CarsController.AddCar(model, brand, bodyType, ATT, price, description, fuelType);
 
                 Console.WriteLine($"A new car Brand: {brand}, Model: {model}, Price: {price}$ successfully added");
             }
             catch (Exception)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Your account type isn't Director");
+                ConsoleOutput.ErrorMessage("Your account type isn't Director");
+            }
+        }
+
+        private void WriteCarsTable(List<Car> Cars)
+        {
+            Table table = new Table("#", "Brand", "Model", "Body Type", "ATT", "Price ($)", "Fuel Type", "Description") { Config = TableConfiguration.MySql() };
+
+            for (int i = 0; i < Cars.Count; i++)
+            {
+                var (model, brand, bodyType, ATT, fuelType, price, description) = Cars[i].GetCarValues();
+                
+                table.AddRow(i + 1, model, brand, bodyType, ATT, price, fuelType, description);
+            }
+
+            Console.Write(table.ToString());
+        }
+
+        private void GetPriciestCar()
+        {
+            Car priciestCar = CarsController.GetPriciestCar();
+
+            if (priciestCar != null)
+            {
+                List<Car> carsList = new List<Car> { priciestCar };
+
+                WriteCarsTable(carsList);
+            }
+            else
+            {
+                Console.WriteLine("The list of cars is empty");
+            }
+        }
+
+        private void GetCheapestCar()
+        {
+            Car cheapestCar = CarsController.GetCheapestCar();
+
+            if (cheapestCar != null)
+            {
+                List<Car> carsList = new List<Car> { cheapestCar };
+
+                WriteCarsTable(carsList);
+            }
+            else
+            {
+                Console.WriteLine("The list of cars is empty");
             }
         }
     }

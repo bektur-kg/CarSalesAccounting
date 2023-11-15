@@ -15,8 +15,7 @@ namespace Accounting.BL.Helpers
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"Sorry, but {inputName} can't be empty");
+                    ConsoleOutput.ErrorMessage($"Sorry, but {inputName} can't be empty");
 
                     continue;
                 }
@@ -38,8 +37,8 @@ namespace Accounting.BL.Helpers
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"Sorry, but {inputName} can't be empty");
+                    ConsoleOutput.ErrorMessage($"Sorry, but {inputName} can't be empty");
+
                     continue;
                 }
                 else
@@ -50,8 +49,7 @@ namespace Accounting.BL.Helpers
                     }
                     else
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"Sorry, but there's no such type in {inputName}");
+                        ConsoleOutput.ErrorMessage($"Sorry, but there's no such type in {inputName}");
                         continue;
                     }
                 }
@@ -69,8 +67,7 @@ namespace Accounting.BL.Helpers
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"Sorry, but {inputName} can't be empty");
+                    ConsoleOutput.ErrorMessage($"Sorry, but {inputName} can't be empty");
 
                     continue;
                 }
@@ -82,8 +79,7 @@ namespace Accounting.BL.Helpers
                     }
                     else
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Sorry, the price is lower that 0 or not valid data for price");
+                        ConsoleOutput.ErrorMessage($"Sorry, the {inputName} is lower that 0 or not valid data for {inputName}");
                     }
                 }
             }

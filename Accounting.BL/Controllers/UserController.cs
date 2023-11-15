@@ -27,7 +27,7 @@ namespace Accounting.BL.Controllers
             Post(FileNames.ACCOUNTS, AllAccounts);
         }
 
-        public void CreateNewUser(string login, string password, AccountTypesEnum newUserAccountType)
+        public void CreateNewUser(string login, string password, AccountTypesEnum newUserAccountType, double? userCommissionPercents = default)
         {
             ArgumentChecker.ArgumentNullChecker(login, password);
 
@@ -40,6 +40,12 @@ namespace Accounting.BL.Controllers
 
             User newUser = new User(login, newUserAccountType);
             AllAccounts.Add(newUser);
+
+            if (newUserAccountType == AccountTypesEnum.Seller || newUserAccountType == AccountTypesEnum.Repairman)
+            {
+                CommissionController commissionController = new CommissionController();
+                commissionController.AddUserCommission(newUser, userCommissionPercents ?? 0);
+            }
 
             SaveAllAccounts();
         }

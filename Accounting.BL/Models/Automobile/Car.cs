@@ -24,5 +24,10 @@ namespace Accounting.BL.Models.AutoMobile
             Description = description;
             FuelType = fuelType;
         }
+
+        public (string model, string brand, CarBodyTypesEnum bodyType, ATTEnum ATT, FuelTypeEnum fuelType, double price, string description) GetCarValues()
+        {
+            return (Model, Brand, BodyType, ATT, FuelType, Price, Description);
+        }
     }
 }

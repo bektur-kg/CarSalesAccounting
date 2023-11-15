@@ -24,7 +24,7 @@ namespace Accounting.CMD
                     repairmanCMD.CommandsList();
                     break;
                 case AccountTypesEnum.Seller:
-                    SellerCMD sellerCMD = new SellerCMD();
+                    SellerCMD sellerCMD = new SellerCMD(login);
 
                     sellerCMD.CommandsList();
                     break;

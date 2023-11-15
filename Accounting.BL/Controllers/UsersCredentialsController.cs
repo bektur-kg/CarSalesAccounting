@@ -1,4 +1,5 @@
-﻿using Accounting.BL.Helpers;
+﻿using Accounting.BL.Exceptions;
+using Accounting.BL.Helpers;
 using Accounting.BL.Models;
 using System;
 using System.Collections.Generic;
@@ -26,13 +27,7 @@ namespace Accounting.BL.Controllers
             Post(FileNames.USERS_CREDENTIALS, Credentials);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="login"></param>
-        /// <param name="password"></param>
-        /// <returns>If that login is free</returns>
-        public bool AddUserCredentials(string login, string password, AccountTypesEnum accountType)
+        public void AddUserCredentials(string login, string password, AccountTypesEnum accountType)
         {
             ArgumentChecker.ArgumentNullChecker(login, password);
 
@@ -42,14 +37,12 @@ namespace Accounting.BL.Controllers
 
             if (Credentials.Find(user => user.Login == newUserCredentials.Login) != null)
             {
-                return false;
+                throw new AccountIsTakenException($"{login} is taken");
             }
             
             Credentials.Add(newUserCredentials);
 
             SaveUsersCredentials();
-
-            return true;
         }
 
         public bool RemoveUserCredentials(string login)
