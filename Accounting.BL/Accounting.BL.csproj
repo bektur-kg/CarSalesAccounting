@@ -69,12 +69,15 @@
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\UsersCredentialsController.cs" />
     <Compile Include="Exceptions\AccountIsTakenException.cs" />
+    <Compile Include="Exceptions\CreatingDirectorException.cs" />
+    <Compile Include="Exceptions\DeletingDirectorException.cs" />
     <Compile Include="Helpers\AccountTypeChecker.cs" />
     <Compile Include="Helpers\ArgumentChecker.cs" />
     <Compile Include="Helpers\ConsoleInput.cs" />
     <Compile Include="Helpers\ConsoleOutput.cs" />
     <Compile Include="Models\Account\Commission.cs" />
     <Compile Include="Models\Automobile\ATTEnum.cs" />
+    <Compile Include="Models\Automobile\BookedCar.cs" />
     <Compile Include="Models\Automobile\CarBodyTypesEnum.cs" />
     <Compile Include="Models\Account\AccountTypesEnum.cs" />
     <Compile Include="Models\Automobile\Car.cs" />

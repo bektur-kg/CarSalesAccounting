@@ -1,16 +1,13 @@
 ﻿using Accounting.BL.Exceptions;
 using Accounting.BL.Helpers;
 using Accounting.BL.Models;
-using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 namespace Accounting.BL.Controllers
 {
     public class UsersCredentialsController : BaseController
     {
         public List<UsersCredentials> Credentials { get; private set; }
-        public bool IsAccountTaken { get; set; }
 
         public UsersCredentialsController()
         {
@@ -30,8 +27,7 @@ namespace Accounting.BL.Controllers
         public void AddUserCredentials(string login, string password, AccountTypesEnum accountType)
         {
             ArgumentChecker.ArgumentNullChecker(login, password);
-
-            //todo: add chekcer for account type
+            ArgumentChecker.CheckIfEnumIsAssigned(accountType);
 
             UsersCredentials newUserCredentials = new UsersCredentials { Login = login, AccountType = accountType, Password = password };
 
@@ -64,14 +60,12 @@ namespace Accounting.BL.Controllers
             {
                 return false;
             }
-
         }
 
         public bool CanSignIn(string login, string password, AccountTypesEnum accountType)
         {
             ArgumentChecker.ArgumentNullChecker(login, password);
-
-            //todo: add account type checker
+            ArgumentChecker.CheckIfEnumIsAssigned(accountType);
 
             UsersCredentials userCredentials = Credentials.Find(user => user.Login == login);
 

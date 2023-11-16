@@ -2,7 +2,9 @@
 using Accounting.BL.Models;
 using Accounting.BL.Models.Automobile;
 using Accounting.BL.Models.AutoMobile;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Accounting.BL.Controllers
@@ -11,16 +13,20 @@ namespace Accounting.BL.Controllers
     {
         public List<Car> Cars { get; private set; }
         public List<Car> SoldCars { get; private set; }
+        public List<BookedCar> BookedCars { get; private set; }
 
         public CarsController(string login) : base(login)
         {
             Cars = Get<List<Car>>(FileNames.CARS) ?? new List<Car>();
             SoldCars = Get<List<Car>>(FileNames.SOLD_CARS) ?? new List<Car>();
+            BookedCars = Get<List<BookedCar>>(FileNames.BOOKED_CARS) ?? new List<BookedCar>();
         }
 
         private void SaveCars()
         {
             Post(FileNames.CARS, Cars);
+            Post(FileNames.SOLD_CARS, SoldCars);
+            Post(FileNames.BOOKED_CARS, BookedCars);
         }
 
         public void AddCar(string model, string brand, CarBodyTypesEnum bodyType, ATTEnum ATT, double price, string description, FuelTypeEnum fuelType)
@@ -45,9 +51,25 @@ namespace Accounting.BL.Controllers
             {
                 Cars.Remove(carToOrder);
                 SoldCars.Add(carToOrder);
+                SaveCars();
             }
 
             return carToOrder;
+        }
+
+        public Car BookCar(string bookingCarBrand, string bookingCarModel, DateTime startDate, DateTime endDate)
+        {
+            var (model, brand, bodyType, ATT, fuelType, price, description) = Cars.FirstOrDefault(car => car.Brand == bookingCarBrand && car.Model == bookingCarModel).GetCarValues();
+            BookedCar carToBook = new BookedCar(model, brand, bodyType, ATT, price, description, fuelType, startDate, endDate);
+
+            if (carToBook != null)
+            {
+                Cars.Remove(carToBook);
+                BookedCars.Add(carToBook);
+                SaveCars();
+            }
+
+            return carToBook;
         }
     }
 }

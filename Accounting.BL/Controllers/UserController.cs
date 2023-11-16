@@ -1,4 +1,5 @@
-﻿using Accounting.BL.Helpers;
+﻿using Accounting.BL.Exceptions;
+using Accounting.BL.Helpers;
 using Accounting.BL.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,6 @@ namespace Accounting.BL.Controllers
     {
         public User Account { get; private set; }
         public List<User> AllAccounts { get; private set; }
-
 
         public UserController(string login)
         {
@@ -27,13 +27,17 @@ namespace Accounting.BL.Controllers
             Post(FileNames.ACCOUNTS, AllAccounts);
         }
 
-        public void CreateNewUser(string login, string password, AccountTypesEnum newUserAccountType, double? userCommissionPercents = default)
+        public void CreateNewUser(string login, string password, AccountTypesEnum newUserAccountType, double userCommissionPercents)
         {
             ArgumentChecker.ArgumentNullChecker(login, password);
-
-            //todo: add newUserAccountType checker
+            ArgumentChecker.CheckIfEnumIsAssigned(newUserAccountType);
 
             AccountTypeChecker.IsDirectorAccount(Account.AccountType);
+
+            if (newUserAccountType == AccountTypesEnum.Director)
+            {
+                throw new CreatingDirectorException("Creating a new Director account, but there is one exists");
+            }
 
             UsersCredentialsController usersCredentialsController = new UsersCredentialsController();
             usersCredentialsController.AddUserCredentials(login, password, newUserAccountType);
@@ -44,10 +48,36 @@ namespace Accounting.BL.Controllers
             if (newUserAccountType == AccountTypesEnum.Seller || newUserAccountType == AccountTypesEnum.Repairman)
             {
                 CommissionController commissionController = new CommissionController();
-                commissionController.AddUserCommission(newUser, userCommissionPercents ?? 0);
+                commissionController.AddUserCommission(newUser, userCommissionPercents);
             }
 
             SaveAllAccounts();
+        }
+
+        public User GetAccountData(string login, AccountTypesEnum accountType) => AllAccounts.FirstOrDefault(account => account.Login == login && account.AccountType == accountType);
+    
+        public User RemoveUser(string login)
+        {
+            ArgumentChecker.ArgumentNullChecker(login);
+            AccountTypeChecker.IsDirectorAccount(Account.AccountType);
+
+            User userToRemove = AllAccounts.FirstOrDefault(account => account.Login == login);
+
+            if (userToRemove?.AccountType == AccountTypesEnum.Director)
+            {
+                throw new DeletingDirectorException();
+            }
+
+            UsersCredentialsController usersCredentialsController = new UsersCredentialsController();
+
+            if (userToRemove != null)
+            {
+                AllAccounts.Remove(userToRemove);
+                SaveAllAccounts();
+                usersCredentialsController.RemoveUserCredentials(userToRemove.Login);
+            }
+
+            return userToRemove;
         }
     }
 }

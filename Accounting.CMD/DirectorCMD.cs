@@ -23,15 +23,19 @@ namespace Accounting.CMD
         7 - Show the cheapest car
         8 - Create a new employee
         9 - Add a new car
+        R - Remove an employee
+        U - List of Employees and their data
         Q - Quit";
 
         public string Login { get; private set; }
-        public CarsController CarsController { get; set; }
+        public CarsController CarsController { get; private set; }
+        public UserController UserController { get; private set; }
 
         public DirectorCMD(string login)
         {
             Login = login;
             CarsController = new CarsController(Login);
+            UserController = new UserController(Login);
         }
 
         public void CommandsList()
@@ -82,6 +86,12 @@ namespace Accounting.CMD
                         AddNewCar();
 
                         break;
+                    case ConsoleKey.R:
+                        RemoveEmployee();
+
+                        break;
+                    case ConsoleKey.U:
+                        break;
                     case ConsoleKey.Q:
                         break;
                 }
@@ -92,39 +102,77 @@ namespace Accounting.CMD
         {
             string login = ConsoleInput.TextType("Login: ");
             string password = ConsoleInput.TextType("Password: ");
-            string accountType = ConsoleInput.TextType("AccountType (Seller, Repairman, Director): ");
-            double userCommissionPercents = 0.0;
-
-            if (accountType == AccountTypesEnum.Seller.ToString())
-            {
-                userCommissionPercents = ConsoleInput.PriceType("User Commission Percents: ");
-            }
+            string accountType = ConsoleInput.TextType("AccountType (Seller, Repairman): ");
+            double userCommissionPercents = ConsoleInput.PriceType("User Commission Percents: ");
 
             if (
                 accountType == AccountTypesEnum.Seller.ToString() || 
-                accountType == AccountTypesEnum.Repairman.ToString() || 
-                accountType == AccountTypesEnum.Director.ToString()
+                accountType == AccountTypesEnum.Repairman.ToString()
                 )
             {
                 Enum.TryParse(accountType, out AccountTypesEnum parsedAccountType);
 
-                UserController userController = new UserController(Login);
-
                 try
                 {
-                    userController.CreateNewUser(login, password, parsedAccountType, userCommissionPercents);
+                    UserController.CreateNewUser(login, password, parsedAccountType, userCommissionPercents);
                 }
                 catch (AccountIsTakenException)
                 {
                     ConsoleOutput.ErrorMessage($"Sorry, This login - {login} is already taken. Try again!");
                     return;
                 }
+                catch (CreatingDirectorException)
+                {
+                    ConsoleOutput.ErrorMessage("Sorry, You cannot create a Director account.");
+                    return;
+                }
 
-                Console.WriteLine($"New user: {login} created successfully. The user type is {parsedAccountType}");
+                Console.WriteLine($"New user: {login} created successfully. The user type is {parsedAccountType}.");
             }
             else
             {
                 ConsoleOutput.ErrorMessage("Sorry, but there is no such account type. Try again!");
+            }
+        }
+
+        private void RemoveEmployee()
+        {
+            Console.WriteLine("\t\t\tRemoving an employee");
+
+            string employeeLogin = ConsoleInput.TextType("\nLogin of employee to be fired: ");
+            bool isAccepted = ConsoleInput.AcceptAction();
+
+            if (isAccepted)
+            {
+                try
+                {
+                    User removedUser = UserController.RemoveUser(employeeLogin);
+
+                    if (removedUser != null)
+                    {
+                        ConsoleOutput.InfoMessage($"\n\nThe Employee - {removedUser.Login} has been deleted successfully");
+                    }
+                    else
+                    {
+                        ConsoleOutput.ErrorMessage($"\nSorry, there's no such user as - {employeeLogin}");
+                    }
+                }
+                catch (DeletingDirectorException)
+                {
+                    ConsoleOutput.ErrorMessage("It is not possible to delete Director account!");
+                }
+                catch (ArgumentNullException)
+                {
+                    ConsoleOutput.ErrorMessage($"You didn't provided {nameof(employeeLogin)}");
+                }
+                catch (Exception)
+                {
+                    ConsoleOutput.ErrorMessage("Sorry, your account type isn't Director");
+                }
+            }
+            else
+            {
+                ConsoleOutput.WarningMessage($"Removing the employee {employeeLogin} is denied");
             }
         }
 
@@ -194,6 +242,19 @@ namespace Accounting.CMD
             {
                 Console.WriteLine("The list of cars is empty");
             }
+        }
+
+        private void WriteUsersTable()
+        {
+            Table table = new Table("#", "Login", "Password", "AccountType", "ATT") { Config = TableConfiguration.MySql() };
+
+            for (int i = 0; i < UserController.AllAccounts.Count; i++)
+            {
+
+                //table.AddRow(i + 1, users[i]);
+            }
+
+            Console.Write(table.ToString());
         }
     }
 }

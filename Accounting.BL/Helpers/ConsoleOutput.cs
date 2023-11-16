@@ -10,5 +10,19 @@ namespace Accounting.BL.Helpers
             Console.WriteLine(message);
             Console.ForegroundColor = ConsoleColor.Green;
         }
+
+        public static void InfoMessage(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(message);
+            Console.ForegroundColor = ConsoleColor.Green;
+        }
+
+        public static void WarningMessage(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(message);
+            Console.ForegroundColor = ConsoleColor.Green;
+        }
     }
 }

@@ -15,5 +15,15 @@ namespace Accounting.BL.Helpers
             }
         }
 
+        public static void CheckIfEnumIsAssigned<T>(params T[] enums) where T: Enum
+        {
+            foreach (var item in enums)
+            {
+                if (!Enum.IsDefined(typeof(T), item))
+                {
+                    throw new ArgumentNullException($"Enum is null", nameof(enums));
+                }
+            }
+        }
     }
 }
