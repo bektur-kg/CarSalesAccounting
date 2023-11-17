@@ -3,6 +3,7 @@ using System;
 
 namespace Accounting.BL.Models.Automobile
 {
+    [Serializable]
     public class BookedCar : Car
     {
         public DateTime StartDate { get; private set; }

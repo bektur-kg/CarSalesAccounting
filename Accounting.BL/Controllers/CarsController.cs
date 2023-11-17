@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 
 namespace Accounting.BL.Controllers
 {
@@ -17,8 +18,8 @@ namespace Accounting.BL.Controllers
 
         public CarsController(string login) : base(login)
         {
-            Cars = Get<List<Car>>(FileNames.CARS) ?? new List<Car>();
             SoldCars = Get<List<Car>>(FileNames.SOLD_CARS) ?? new List<Car>();
+            Cars = Get<List<Car>>(FileNames.CARS) ?? new List<Car>();
             BookedCars = Get<List<BookedCar>>(FileNames.BOOKED_CARS) ?? new List<BookedCar>();
         }
 
@@ -59,17 +60,18 @@ namespace Accounting.BL.Controllers
 
         public Car BookCar(string bookingCarBrand, string bookingCarModel, DateTime startDate, DateTime endDate)
         {
-            var (model, brand, bodyType, ATT, fuelType, price, description) = Cars.FirstOrDefault(car => car.Brand == bookingCarBrand && car.Model == bookingCarModel).GetCarValues();
-            BookedCar carToBook = new BookedCar(model, brand, bodyType, ATT, price, description, fuelType, startDate, endDate);
-
-            if (carToBook != null)
+            Car foundCar = Cars.FirstOrDefault(car => car.Brand == bookingCarBrand && car.Model == bookingCarModel);
+            if (foundCar != null)
             {
-                Cars.Remove(carToBook);
+                var (model, brand, bodyType, ATT, fuelType, price, description) = foundCar.GetCarValues();
+                BookedCar carToBook = new BookedCar(model, brand, bodyType, ATT, price, description, fuelType, startDate, endDate);
+
+                Cars.Remove(foundCar);
                 BookedCars.Add(carToBook);
                 SaveCars();
             }
 
-            return carToBook;
+            return foundCar;
         }
     }
 }

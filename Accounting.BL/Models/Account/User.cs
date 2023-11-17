@@ -11,7 +11,7 @@ namespace Accounting.BL.Models
         public User(string login, AccountTypesEnum accountType)
         {
             Login = login;
-            AccountType = accountType;
+            AccountType = accountType;  
         }
     }
 }
