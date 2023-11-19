@@ -15,7 +15,7 @@ namespace Accounting.CMD
         //todo: make a string with beautiful indentations
         public const string COMMANDS_LIST = @"
         1 - Show list of cars available to sell
-        2 - Show quantities of sold cars
+        2 - Show sold cars
         3 - Show a car with maximum count of sells
         4 - Show a car with minimum count of sells
         5 - Show a car that needs service the most time
@@ -59,10 +59,16 @@ namespace Accounting.CMD
                         WriteCarsTable(CarsController.Cars);
                         break;
                     case ConsoleKey.D2:
+                        CarsTable(CarsController.SoldCars, "\t\t\tList of Sold Cars");
+
                         break;
                     case ConsoleKey.D3:
+                        ShowCarWithMaxSells();
+
                         break;
                     case ConsoleKey.D4:
+                        ShowCarWithMinSells();
+
                         break;
                     case ConsoleKey.D5:
                         break;
@@ -91,12 +97,64 @@ namespace Accounting.CMD
 
                         break;
                     case ConsoleKey.U:
+                        WriteUsersTable();
+
                         break;
                     case ConsoleKey.Q:
+                        return;
+                    default:
+                        ConsoleOutput.WarningMessage("There is no such command");
                         break;
                 }
             }
         }
+
+        private void ShowCarWithMaxSells()
+        {
+            Car carWithMaxSells = CarsController.GetCarWithMaxSells();
+
+            if (carWithMaxSells != null)
+            {
+                WriteCarsTable(new List<Car> { carWithMaxSells });
+            }
+            else
+            {
+                ConsoleOutput.WarningMessage("The list of sold cars is empty");
+            }
+        }
+
+        private void ShowCarWithMinSells()
+        {
+            Car carWithMinSells = CarsController.GetCarWithMinSells();
+
+            if (carWithMinSells != null)
+            {
+                WriteCarsTable(new List<Car> { carWithMinSells });
+            }
+            else
+            {
+                ConsoleOutput.WarningMessage("The list of sold cars is empty");
+            }
+        }
+
+        private void CarsTable(List<SoldCar> cars, string tableName)
+        {
+            Console.WriteLine(tableName);
+            Table table = new Table("#", "Brand", "Model", "Car Price ($)", "Tax Price", "Commission Price", "Total Price") { Config = TableConfiguration.MySql() };
+
+            for (int i = 0; i < cars.Count; i++)
+            {
+                var (model, brand, _, _, _, price, _) = cars[i].Car.GetCarValues();
+                double taxPrice = cars[i].TaxPrice;
+                double totalPrice = cars[i].TotalPrice;
+                double commissionPrice = cars[i].CommissionPrice;
+
+                table.AddRow(i + 1, model, brand, price, taxPrice, commissionPrice, totalPrice);
+            }
+
+            Console.Write(table.ToString());
+        }
+
 
         private void CreateNewUser()
         {
@@ -244,14 +302,20 @@ namespace Accounting.CMD
             }
         }
 
-        private void WriteUsersTable()
+        private void WriteUsersTable() 
         {
-            Table table = new Table("#", "Login", "Password", "AccountType", "ATT") { Config = TableConfiguration.MySql() };
+            Table table = new Table("#", "Login", "Password", "AccountType", "Profit", "CommissionPercent") { Config = TableConfiguration.MySql() };
 
             for (int i = 0; i < UserController.AllAccounts.Count; i++)
             {
+                if (UserController.AllAccounts[i].AccountType == AccountTypesEnum.Director)
+                {
+                    continue;
+                }
 
-                //table.AddRow(i + 1, users[i]);
+                var (login, accountType, password, profit, commissionPercent) = UserController.GetAllAccountData(UserController.AllAccounts[i].Login);
+
+                table.AddRow(i + 1, login, password, accountType, profit, commissionPercent);
             }
 
             Console.Write(table.ToString());

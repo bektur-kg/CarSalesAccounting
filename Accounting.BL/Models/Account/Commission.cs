@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Accounting.BL.Helpers;
+using System;
 
 namespace Accounting.BL.Models.Account
 {
@@ -7,12 +8,16 @@ namespace Accounting.BL.Models.Account
     {
         public double CommissionPercents { get; set; }
         public User User { get; set; }
+        public double Profit { get;  set; }
 
         public Commission(User user, double commissionPercents)
         {
-            //todo: add user and percents checker
+            ArgumentChecker.ArgumentNullChecker(user);
+            ArgumentChecker.CheckPrice(commissionPercents);
+
             CommissionPercents = commissionPercents;
             User = user;
         }
+
     }
 }

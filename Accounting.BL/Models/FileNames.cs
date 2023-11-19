@@ -8,6 +8,7 @@
         public const string SOLD_CARS = "sold_cars.dat";
         public const string COMMISSIONS = "commissions.dat";
         public const string IN_SERVICE_CARS = "in_service_cars.dat";
+        public const string SERVED_CARS = "served_cars.dat";
         public const string BOOKED_CARS = "booked_cars.dat";
         public const string RETURNED_CARS = "returned_cars.dat";
     }

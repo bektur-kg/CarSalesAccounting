@@ -47,7 +47,7 @@ namespace Accounting.BL.Controllers
 
             if (newUserAccountType == AccountTypesEnum.Seller || newUserAccountType == AccountTypesEnum.Repairman)
             {
-                CommissionController commissionController = new CommissionController();
+                CommissionController commissionController = new CommissionController(newUser.Login);
                 commissionController.AddUserCommission(newUser, userCommissionPercents);
             }
 
@@ -78,6 +78,16 @@ namespace Accounting.BL.Controllers
             }
 
             return userToRemove;
+        }
+
+        public (string login, AccountTypesEnum accountType, string password, double profit, double commissionPercent) GetAllAccountData(string login)
+        {
+            UsersCredentialsController userCredentialsController = new UsersCredentialsController();
+            UsersCredentials userCredentials = userCredentialsController.Credentials.FirstOrDefault(credential => credential.Login == login);
+
+            CommissionController commissionController = new CommissionController(login);
+
+            return (userCredentials.Login, userCredentials.AccountType, userCredentials.Password, commissionController.UserCommission.Profit, commissionController.UserCommission.CommissionPercents);
         }
     }
 }

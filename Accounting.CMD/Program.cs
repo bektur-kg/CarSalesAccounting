@@ -19,7 +19,7 @@ namespace Accounting.CMD
             switch (accountType)
             {
                 case AccountTypesEnum.Repairman:
-                    RepairmanCMD repairmanCMD = new RepairmanCMD();
+                    RepairmanCMD repairmanCMD = new RepairmanCMD(login);
 
                     repairmanCMD.CommandsList();
                     break;

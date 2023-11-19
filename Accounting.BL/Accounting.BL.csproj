@@ -82,10 +82,13 @@
     <Compile Include="Models\Account\AccountTypesEnum.cs" />
     <Compile Include="Models\Automobile\Car.cs" />
     <Compile Include="Models\Automobile\FuelTypeEnum.cs" />
+    <Compile Include="Models\Automobile\InServiceCar.cs" />
+    <Compile Include="Models\Automobile\SoldCar.cs" />
     <Compile Include="Models\FileNames.cs" />
     <Compile Include="Models\Automobile\SearchTypesEnum.cs" />
     <Compile Include="Models\Account\User.cs" />
     <Compile Include="Models\Account\UsersCredentials.cs" />
+    <Compile Include="Models\SearchTypesEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

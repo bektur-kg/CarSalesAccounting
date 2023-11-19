@@ -79,7 +79,7 @@ namespace Accounting.BL.Helpers
                     }
                     else
                     {
-                        ConsoleOutput.ErrorMessage($"Sorry, the {inputName} is lower that 0 or not valid data for {inputName}");
+                        ConsoleOutput.ErrorMessage($"Sorry, the {inputName} is <= 0 or not valid data for {inputName}");
                     }
                 }
             }
