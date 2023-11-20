@@ -24,9 +24,17 @@ namespace Accounting.BL.Controllers
             ArgumentChecker.ArgumentNullChecker(user);
             ArgumentChecker.CheckPrice(commissionPercents);
 
-            Commission commission = new Commission(user, commissionPercents / 100);
+            Commission commission = new Commission(user, commissionPercents);
             CommissionsList.Add(commission);
             SaveCommissionsList();
+        }
+
+        public void RemoveUserCommission(string login)
+        {
+            Commission commissionToRemove = CommissionsList.FirstOrDefault(commission => commission.User.Login == login);
+
+            if (commissionToRemove != null)
+                CommissionsList.Remove(commissionToRemove);
         }
 
         private void SaveCommissionsList()

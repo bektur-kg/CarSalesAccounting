@@ -12,13 +12,15 @@ namespace Accounting.CMD
     public class SellerCMD
     {
         private const string COMMANDS_LIST = 
-        "\n1 - Show all list of cars\n2 - Search a car\n3 - Report of cars\n4 - Order a car\n5 - Show list of sold cars\n6 - Return a car\n7 - Book a car\n8 - Show list of booked cars\nQ - Exit\n";
+        "\n1 - Show all list of cars\n2 - Search a car\n3 - Report of cars\n4 - Order a car\n5 - Show list of sold cars\n6 - Return a car\n7 - Book a car\n8 - Show list of booked cars\n9 - Show my profit\nQ - Exit\n";
 
         public CarsController CarsController { get; private set; }
+        public string Login { get; private set; }
 
         public SellerCMD(string login)
         {
             CarsController = new CarsController(login);
+            Login = login;
         }
 
         public void CommandsList()
@@ -28,6 +30,7 @@ namespace Accounting.CMD
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("\nPlease enter a number of a command in menu.\nIf you finished enter 7");
                 Console.WriteLine(COMMANDS_LIST);
+                
 
                 ConsoleKeyInfo consoleKey = Console.ReadKey();
 
@@ -46,6 +49,8 @@ namespace Accounting.CMD
 
                         break;
                     case ConsoleKey.D3:
+                        CarsReport();
+
                         break;
                     case ConsoleKey.D4:
                         OrderACar();
@@ -67,6 +72,10 @@ namespace Accounting.CMD
                         CarsTable(CarsController.BookedCars, "\t\t\tList of Booked Cars");
 
                         break;
+                    case ConsoleKey.D9:
+                        ShowProfit();
+
+                        break;
                     case ConsoleKey.Q:
                         return;
                     default:
@@ -74,6 +83,21 @@ namespace Accounting.CMD
                         break;
                 }
             }
+        }
+
+        private void ShowProfit()
+        {
+            CommissionController commissionController = new CommissionController(Login);
+
+            ConsoleOutput.InfoMessage($"Your commission percents for work is {commissionController.UserCommission.CommissionPercents}%.\nYour profit is {commissionController.UserCommission.Profit}$");
+        }
+
+        private void CarsReport()
+        {
+            CarsTable(CarsController.Cars, "\t\t\tAll Cars available to sell");
+            CarsTable(CarsController.SoldCars, "\t\t\tAll Sold Cars");
+            CarsTable(CarsController.InServiceCars, "\t\t\tAll in-service cars");
+            CarsTable(CarsController.BookedCars, "\t\t\tAll booked cars");
         }
 
         private void SearchCars()
@@ -129,6 +153,21 @@ namespace Accounting.CMD
                 var (model, brand, bodyType, ATT, fuelType, price, description, startDate, endDate) = cars[i].GetBookedCarValues();
 
                 table.AddRow(i + 1, brand, model, bodyType, ATT, price, fuelType, description, startDate, endDate);
+            }
+
+            Console.Write(table.ToString());
+        }
+
+        private void CarsTable(List<InServiceCar> cars, string tableName)
+        {
+            Console.WriteLine(tableName);
+            Table table = new Table("#", "Brand", "Model", "Car Price ($)", "Service Reason") { Config = TableConfiguration.MySql() };
+
+            for (int i = 0; i < cars.Count; i++)
+            {
+                var (model, brand, _, _, _, price, _, serviceReason) = cars[i].GetInServiceCarValues();
+
+                table.AddRow(i + 1, model, brand, price, serviceReason);
             }
 
             Console.Write(table.ToString());

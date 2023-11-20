@@ -20,10 +20,12 @@ namespace Accounting.CMD
         ";
 
         public CarsController CarsController { get; private set; }
+        public string Login { get; private set; }
 
         public RepairmanCMD(string login)
         {
             CarsController = new CarsController(login);
+            Login = login;
         }
 
         public void CommandsList()
@@ -53,18 +55,11 @@ namespace Accounting.CMD
 
                         break;
                     case ConsoleKey.D4:
+                        CarsTable(CarsController.ServedCars, "\t\t\tThe list of Served Cars");
 
                         break;
                     case ConsoleKey.D5:
-
-                        break;
-                    case ConsoleKey.D6:
-
-                        break;
-                    case ConsoleKey.D7:
-
-                        break;
-                    case ConsoleKey.D8:
+                        ShowProfit();
 
                         break;
                     case ConsoleKey.Q:
@@ -90,7 +85,7 @@ namespace Accounting.CMD
             }
             else
             {
-                ConsoleOutput.ErrorMessage($"Sorry, there is no such car in service list - {brandName} {modelName}");
+                ConsoleOutput.ErrorMessage($"Sorry, there is no such car in service list - {brandName} {modelName}"); 
             }
         }
 
@@ -125,6 +120,13 @@ namespace Accounting.CMD
             }
 
             Console.Write(table.ToString());
+        }
+
+        private void ShowProfit()
+        {
+            CommissionController commissionController = new CommissionController(Login);
+
+            ConsoleOutput.InfoMessage($"Your commission percents for work is {commissionController.UserCommission.CommissionPercents}%.\nYour profit is {commissionController.UserCommission.Profit}$");
         }
     }
 }

@@ -69,12 +69,16 @@ namespace Accounting.BL.Controllers
             }
 
             UsersCredentialsController usersCredentialsController = new UsersCredentialsController();
+            CommissionController commissionController = new CommissionController(login);
+
+
 
             if (userToRemove != null)
             {
                 AllAccounts.Remove(userToRemove);
                 SaveAllAccounts();
                 usersCredentialsController.RemoveUserCredentials(userToRemove.Login);
+                commissionController.RemoveUserCommission(userToRemove.Login);
             }
 
             return userToRemove;

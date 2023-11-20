@@ -61,7 +61,7 @@ namespace Accounting.BL.Controllers
 
                 double totalPrice = userCommissionPrice + carToOrder.Price + carToOrder.Price * (taxPercents / 100);
 
-                SoldCar soldCar = new SoldCar(carToOrder, taxPercents / 100, totalPrice, userCommissionPrice);
+                SoldCar soldCar = new SoldCar(carToOrder, taxPercents, totalPrice, userCommissionPrice);
 
                 Cars.Remove(carToOrder);
                 SoldCars.Add(soldCar);
@@ -144,10 +144,10 @@ namespace Accounting.BL.Controllers
         public InServiceCar GetCarToService(string carToServiceModel, string carToServiceBrand, string serviceReason)
         {
             Car carToGetToService = Cars.FirstOrDefault(car => car.Model == carToServiceModel && car.Brand == carToServiceBrand);
-            var (model, brand, bodyType, ATT, fuelType, price, description) = carToGetToService.GetCarValues();
 
             if (carToGetToService != null)
             {
+                var (model, brand, bodyType, ATT, fuelType, price, description) = carToGetToService.GetCarValues();
                 InServiceCar newInServiceCar = new InServiceCar(model, brand, bodyType, ATT, price, description, fuelType, serviceReason);
 
                 InServiceCars.Add(newInServiceCar);
