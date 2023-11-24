@@ -119,7 +119,7 @@ namespace Accounting.CMD
             }
             else
             {
-                ConsoleOutput.WarningMessage("The list of sold cars is empty");
+                ConsoleOutput.WarningMessage("The list of sold cars is empty.");
             }
         }
 
